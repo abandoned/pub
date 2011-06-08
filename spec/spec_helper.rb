@@ -1,7 +1,5 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'rspec'
+require "rubygems"
+require "bundler/setup"
+require "rspec"
 
-require File.expand_path('../../lib/pub', __FILE__)
-
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+require File.expand_path("../../lib/pub", __FILE__)
