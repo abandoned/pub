@@ -1,4 +1,4 @@
-module Pub
+class Pub
   # Methods used by various classes in Pub.
   module Helpers
     class DecodeException < StandardError; end

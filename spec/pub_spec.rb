@@ -1,30 +1,35 @@
 require "spec_helper"
 
 describe Pub do
-  describe ".[]" do
-    it "returns a queue object" do
-        Pub["queue"].should be_a Pub::Queue
-    end
-  end
-
-  describe ".redis" do
-    it "returns a connection pool" do
-      EM.synchrony do
-        Pub.redis.should be_a EventMachine::Synchrony::ConnectionPool
-        EM.stop
-      end
-    end
-  end
-
-  describe ".configure" do
-    it "yields a block to configure system-wide settings" do
+  describe ".manage" do
+    it "yields a block to manage the bar counter" do
       expect {
-        Pub.configure do |conf|
-          conf.pool_size = 1
+        Pub.manage do |counter|
+          counter.redis_url = 'foo'
         end
       }.to change {
-        Pub.send(:configuration).pool_size
-      }.from(Pub::Configuration::DEFAULT_POOL_SIZE).to(1)
+        Pub::BarCounter.redis_url
+      }.to('foo')
+    end
+  end
+
+  context "given a pub" do
+    describe "#new_bartender" do
+      it "returns a new bartender" do
+        Pub.new('Ye Olde Rubies') do |pub|
+          pub.new_bartender.should be_a Pub::Bartender
+          pub.close
+        end
+      end
+    end
+
+    describe "#new_patron" do
+      it "returns a new patron" do
+        Pub.new('Ye Olde Rubies') do |pub|
+          pub.new_patron.should be_a Pub::Patron
+          pub.close
+        end
+      end
     end
   end
 end
