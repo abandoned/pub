@@ -1,6 +1,6 @@
 require "spec_helper"
 
 class Pub
-  describe Bartender do
+  describe Patron do
   end
 end
