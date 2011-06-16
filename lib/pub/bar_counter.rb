@@ -12,7 +12,7 @@ class Pub
       Redis.new(url: redis_url)
     end
 
-    def sub
+    def stool
       Redis.new(url: redis_url)
     end
   end
