@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9"
 
   {
-    #"eventmachine"        => "~> 1.0.0.beta.3",
     "em-synchrony"        => "~> 0.3.0.beta.1",
     "hiredis"             => "~> 0.3.2",
     "redis"               => "~> 2.2.1"
