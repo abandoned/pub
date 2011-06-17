@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Pub do
+  include PubHelperMethods
+
   describe ".manage" do
     it "yields a block to manage the bar counter" do
       expect {
