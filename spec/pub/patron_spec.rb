@@ -10,10 +10,10 @@ class Pub
           drink   = 'Guinness'
           patron  = pub.new_patron
 
-          glasses = stub_service(pub, drink) { patron.order(drink) }
+          glasses = stub_bartender(pub, drink) { patron.order(drink) }
 
           glasses.first.should eql 'A pint of Guinness'
-          BarCounter.beer_tap.rpop(pub.name).should eql drink
+          Pub.counter.rpop(pub.name).should eql drink
         end
       end
 
@@ -22,10 +22,10 @@ class Pub
           drinks  = %w{Guinness Stella}
           patron  = pub.new_patron
 
-          glasses = stub_service(pub, *drinks) { patron.order(*drinks) }
+          glasses = stub_bartender(pub, *drinks) { patron.order(*drinks) }
 
           glasses.should =~ ['A pint of Guinness', 'A pint of Stella']
-          2.times.map { BarCounter.beer_tap.rpop(pub.name) }.should =~ drinks
+          2.times.map { Pub.counter.rpop(pub.name) }.should =~ drinks
         end
       end
 
@@ -34,7 +34,7 @@ class Pub
           drinks  = []
           patron  = pub.new_patron
 
-          glasses = stub_service(pub, *drinks) { patron.order(*[]) }
+          glasses = stub_bartender(pub, *drinks) { patron.order(*[]) }
 
           glasses.should be_empty
         end

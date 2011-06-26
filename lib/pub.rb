@@ -6,7 +6,6 @@ end
 require "redis"
 require "redis/connection/synchrony"
 
-require "pub/bar_counter"
 require "pub/bartender"
 require "pub/patron"
 
@@ -16,14 +15,17 @@ class Pub
   attr_reader :name
 
   class << self
-    # Manages the bar counter.
-    #
-    #   Pub.manage do |counter|
-    #     counter.redis_url = 'redis://localhost:6379'
-    #   end
-    #
-    def manage
-      yield BarCounter
+    # A device that dispenses beer.
+    attr_accessor :beer_tap
+
+    # Where beers are served.
+    def counter
+      @counter ||= Redis.new(url: beer_tap)
+    end
+
+    # What a patron sits on.
+    def stool
+      Redis.new(url: beer_tap)
     end
   end
 
@@ -37,7 +39,7 @@ class Pub
   #     bartender = pub.new_bartender
   #
   #     patron.order('1 pint of guinness') do |beer|
-  #       # chug beer
+  #       # consume beer
   #     end
   #
   #     bartender.serve(10) do |beer|

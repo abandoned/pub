@@ -12,12 +12,12 @@ module PubHelperMethods
     end
   end
 
-  def stub_service(pub, *drinks)
+  def stub_bartender(pub, *drinks)
     EM.add_timer(0.05) do
       Fiber.new do
-        beer_tap = Pub::BarCounter.beer_tap
+        counter = Pub.counter
         drinks.each do |drink|
-          beer_tap.publish([pub.name, drink].join(':'), "A pint of #{drink}")
+          counter.publish([pub.name, drink].join(':'), "A pint of #{drink}")
         end
       end.resume
     end

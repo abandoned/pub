@@ -11,19 +11,19 @@ class Pub
 
     # Orders one or more drinks at the bar counter.
     #
-    # If given a block, yields the drinks as they become available. Otherwise,
-    # returns all drinks when they are ready.
+    # If given a block, yields glasses as they become available. Otherwise,
+    # returns all glasses when they are ready.
     def order(*drinks)
       orders, glasses = [], []
 
       drinks.each do |drink|
-        bar_stool.rpush(pub_name, drink)
+        Pub.counter.rpush(pub_name, drink)
         orders << [pub_name, drink].join(':')
       end
 
-      bar_stool.subscribe(*orders) do |on|
+      stool.subscribe(*orders) do |on|
         on.message do |order, glass|
-          bar_stool.unsubscribe(order)
+          stool.unsubscribe(order)
           if block_given?
             yield glass
           else
@@ -37,8 +37,8 @@ class Pub
 
     private
 
-    def bar_stool
-      @bar_stool ||= BarCounter.bar_stool
+    def stool
+      @stool ||= Pub.stool
     end
   end
 end

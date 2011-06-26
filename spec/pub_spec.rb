@@ -3,15 +3,25 @@ require "spec_helper"
 describe Pub do
   include PubHelperMethods
 
-  describe ".manage" do
-    it "yields a block to manage the bar counter" do
-      expect {
-        Pub.manage do |counter|
-          counter.redis_url = 'foo'
-        end
-      }.to change {
-        Pub::BarCounter.redis_url
-      }.to('foo')
+  describe ".counter" do
+    it "returns a Redis connection" do
+      Pub.counter.should be_a Redis
+    end
+
+    it "caches that Redis connection" do
+      Redis.should_not_receive :new
+      Pub.counter
+    end
+  end
+
+  describe ".stool" do
+    it "returns a Redis connection" do
+      Pub.stool.should be_a Redis
+    end
+
+    it "does not cache that Redis connection" do
+      Redis.should_receive(:new).once
+      Pub.stool
     end
   end
 
