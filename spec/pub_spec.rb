@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Pub do
-  include PubHelperMethods
+  include PubStubbers
 
   describe ".counter" do
     it "returns a Redis connection" do
