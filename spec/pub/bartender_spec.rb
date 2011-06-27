@@ -17,7 +17,17 @@ class Pub
 
     describe "#serve" do
       it "serves a drink" do
-        pending
+        orders = ["Guinness", "Stella"]
+        drinks = Array.new
+
+        enter_pub do |pub|
+          bartender = pub.new_bartender
+          Pub.counter.should_receive(:publish).once.with("Ye Olde Rubies:Guinness", "A pint of Guinness")
+          Pub.counter.should_receive(:publish).once.with("Ye Olde Rubies:Stella", "A pint of Stella")
+          orders.each do |order|
+            bartender.serve(order) { "A pint of #{order}" }
+          end
+        end
       end
     end
   end

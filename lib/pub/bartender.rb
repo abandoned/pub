@@ -5,7 +5,7 @@ class Pub
     end
 
     # Serves an order.
-    def serve(drink, &block)
+    def serve(order, &block)
       Pub.counter.publish([@pub_name, order].join(':'), block.call)
     end
 
