@@ -1,8 +1,3 @@
-begin
-  require "yajl"
-rescue LoadError
-  require "json"
-end
 require "redis"
 require "redis/connection/synchrony"
 
