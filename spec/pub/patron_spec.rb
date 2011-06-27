@@ -2,52 +2,53 @@ require "spec_helper"
 
 class Pub
   describe Patron do
-    include PubHelperMethods
+    include PubStubbers
 
     describe "#order" do
-      it "orders a drink" do
-        enter_pub do |pub|
-          drink   = 'Guinness'
-          patron  = pub.new_patron
-
-          glasses = stub_bartender(pub, drink) { patron.order(drink) }
-
-          glasses.first.should eql 'A pint of Guinness'
-          Pub.counter.rpop(pub.name).should eql drink
+      context "when ordering one drink" do
+        it "places an order at the counter" do
+          enter_pub do |pub|
+            patron  = pub.new_patron
+            stub_service(pub, 'Guinness')
+            drinks = patron.order('Guinness')
+            drinks.should eql ['A pint of Guinness']
+          end
         end
       end
 
-      it "orders a few drinks" do
-        enter_pub do |pub|
-          drinks  = %w{Guinness Stella}
-          patron  = pub.new_patron
-
-          glasses = stub_bartender(pub, *drinks) { patron.order(*drinks) }
-
-          glasses.should =~ ['A pint of Guinness', 'A pint of Stella']
-          2.times.map { Pub.counter.rpop(pub.name) }.should =~ drinks
+      context "when ordering a few drinks" do
+        it "places an order at the counter" do
+          enter_pub do |pub|
+            patron  = pub.new_patron
+            stub_service(pub, 'Guinness', 'Stella')
+            drinks = patron.order('Guinness', 'Stella')
+            drinks.should =~ ['A pint of Guinness', 'A pint of Stella']
+          end
         end
       end
 
-      it "receives nothing when he cannot make up his mind" do
-        enter_pub do |pub|
-          drinks  = []
-          patron  = pub.new_patron
-
-          glasses = stub_bartender(pub, *drinks) { patron.order(*[]) }
-
-          glasses.should be_empty
+      context "when bartender does not prepare a drink on time" do
+        it "picks up whatever is there" do
+          enter_pub do |pub|
+            patron = pub.new_patron
+            patron.waits_no_more_than 0.5
+            stub_service(pub, 'Guinness')
+            drinks = patron.order('Guinness', 'Stella')
+            drinks.should eql ['A pint of Guinness']
+          end
         end
-
       end
-      # context "given no channels" do
-      # end
 
-      # context "when a subscription times out" do
-      #   before do
-      #     subscriber.stub!(:channels).and_return(['foo'])
-      #   end
-      # end
+      context "when patron does not know what he wants" do
+        it "raises an error" do
+          expect do
+            enter_pub do |pub|
+              patron  = pub.new_patron
+              patron.order
+            end.to raise_error ArgumentError
+          end
+        end
+      end
     end
   end
 end
