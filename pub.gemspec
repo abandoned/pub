@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   end
 
   {
+    "cucumber"            => "~> 1.0",
     "rspec"               => "~> 2.6",
     "ruby-debug19"        => "~> 0.11"
   }.each do |lib, version|
