@@ -39,6 +39,6 @@ When /^I order:$/ do |table|
   @tray       = patron.order(*drinks)
 end
 
-Then /^I should receive a knock on the shoulder in (\d+) seconds?$/ do |seconds|
+Then /^I should receive my drinks? in (\d+) seconds?$/ do |seconds|
   (Time.now - @started_at).should be_within(0.1).of(seconds)
 end

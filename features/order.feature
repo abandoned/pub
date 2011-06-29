@@ -10,7 +10,7 @@ Feature: Order drinks
     When I order:
       | drink          |
       | Brooklyn Lager |
-    Then I should receive a knock on the shoulder in 1 second
+    Then I should receive my drink in 1 second
 
   Scenario: Order multiple drinks
     Given 1 bartender
@@ -18,7 +18,7 @@ Feature: Order drinks
       | drink          |
       | Brooklyn Lager |
       | Efes Pilsen    |
-    Then I should receive a knock on the shoulder in 2 seconds
+    Then I should receive my drinks in 2 seconds
 
   Scenario: Two bartenders
     Given 2 bartenders
@@ -26,4 +26,4 @@ Feature: Order drinks
       | drink          |
       | Brooklyn Lager |
       | Efes Pilsen    |
-    Then I should receive a knock on the shoulder in 1 second
+    Then I should receive my drinks in 1 second
