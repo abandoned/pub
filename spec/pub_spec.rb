@@ -3,25 +3,9 @@ require "spec_helper"
 describe Pub do
   include PubStubbers
 
-  describe ".counter" do
+  describe ".bar_counter" do
     it "returns a Redis connection" do
-      Pub.counter.should be_a Redis
-    end
-
-    it "caches that Redis connection" do
-      Redis.should_not_receive :new
-      Pub.counter
-    end
-  end
-
-  describe ".stool" do
-    it "returns a Redis connection" do
-      Pub.stool.should be_a Redis
-    end
-
-    it "does not cache that Redis connection" do
-      Redis.should_receive(:new).once
-      Pub.stool
+      Pub.bar_counter.should be_a Redis
     end
   end
 

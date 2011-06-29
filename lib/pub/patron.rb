@@ -17,20 +17,18 @@ class Pub
 
       orders, tray = [], []
 
-      # Order drinks at the counter.
       drinks.each do |drink|
-        Pub.counter.rpush(@pub_name, drink)
+        bar_counter.rpush(@pub_name, drink)
         orders << [@pub_name, drink].join(':')
       end
 
       timer = EM.add_timer(@timeout) do
-        stool.unsubscribe
+        bar_counter.unsubscribe
       end
 
-      # Sit on a stool and wait.
-      stool.subscribe(*orders) do |on|
+      bar_counter.subscribe(*orders) do |on|
         on.message do |order, drink|
-          stool.unsubscribe(order)
+          bar_counter.unsubscribe(order)
           if block_given?
             yield drink
           else
@@ -50,8 +48,8 @@ class Pub
 
     private
 
-    def stool
-      @stool ||= Pub.stool
+    def bar_counter
+      @bar_counter ||= Pub.bar_counter
     end
   end
 end

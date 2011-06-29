@@ -22,8 +22,9 @@ class Pub
 
         enter_pub do |pub|
           bartender = pub.new_bartender
-          Pub.counter.should_receive(:publish).once.with("Ye Olde Rubies:Guinness", "A pint of Guinness")
-          Pub.counter.should_receive(:publish).once.with("Ye Olde Rubies:Stella", "A pint of Stella")
+          counter = bartender.send(:bar_counter)
+          counter.should_receive(:publish).once.with("Ye Olde Rubies:Guinness", "A pint of Guinness")
+          counter.should_receive(:publish).once.with("Ye Olde Rubies:Stella", "A pint of Stella")
           orders.each do |order|
             bartender.serve(order) { "A pint of #{order}" }
           end

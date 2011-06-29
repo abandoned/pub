@@ -14,12 +14,7 @@ class Pub
     attr_accessor :beer_tap
 
     # Where beers are served.
-    def counter
-      @counter ||= Redis.new(url: beer_tap)
-    end
-
-    # What a patron sits on.
-    def stool
+    def bar_counter
       Redis.new(url: beer_tap)
     end
   end
@@ -45,7 +40,7 @@ class Pub
   #
   def initialize(name)
     @name = name
-    EM.synchrony { yield self }
+    EM.synchrony { yield self } if block_given?
   end
 
   # Closes the pub for the night.

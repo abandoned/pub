@@ -6,28 +6,34 @@ class Pub
 
     # Serves an order.
     def serve(order, &block)
-      Pub.counter.publish([@pub_name, order].join(':'), block.call)
+      bar_counter.publish([@pub_name, order].join(':'), block.call)
     end
 
     # Takes one or more orders.
     #
-    #   drinks = bartender.take_orders(3)
-    #   drinks.each do |drink|
-    #       bartender.serve(drink) do
+    #   orders = bartender.take_orders(3)
+    #   orders.each do |order|
+    #       bartender.serve(order) do
     #       # prepare drink
     #     end
     #   end
     def take_orders(count = 1)
-      drinks = Array.new
+      orders = Array.new
 
       # Seems I can't use a simple map here.
       count.times do
-        drink = Pub.counter.lpop(@pub_name)
-        break if drink.nil?
-        drinks << drink
+        order = bar_counter.lpop(@pub_name)
+        break if order.nil?
+        orders << order
       end
 
-      drinks
+      orders
+    end
+
+    private
+
+    def bar_counter
+      @bar_counter ||= Pub.bar_counter
     end
   end
 end

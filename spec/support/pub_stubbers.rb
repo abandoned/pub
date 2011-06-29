@@ -8,7 +8,7 @@ module PubStubbers
 
   def stub_orders(pub, *drinks)
     drinks.each do |drink|
-      Pub.counter.rpush(pub.name, drink)
+      Pub.bar_counter.rpush(pub.name, drink)
     end
   end
 
@@ -16,7 +16,7 @@ module PubStubbers
     EM.add_timer(0.1) do
       Fiber.new do
         drinks.each do |drink|
-          Pub.counter.publish([pub.name, drink].join(':'), "A pint of #{drink}")
+          Pub.bar_counter.publish([pub.name, drink].join(':'), "A pint of #{drink}")
         end
       end.resume
     end
