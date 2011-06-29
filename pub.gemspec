@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   {
     "cucumber"            => "~> 1.0",
     "rspec"               => "~> 2.6",
-    "ruby-debug19"        => "~> 0.11"
   }.each do |lib, version|
     s.add_development_dependency lib, version
   end
