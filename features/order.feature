@@ -1,6 +1,6 @@
 Feature: Order drinks
-  As a pub patron
-  I want bartenders to take orders asynchronously
+  As a pub patron  
+  I want bartenders to take orders asynchronously  
   So I do not block the counter
 
   Scenario: Order a drink
