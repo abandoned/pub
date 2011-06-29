@@ -9,3 +9,7 @@ Around do |scenario, block|
     EM.stop
   end
 end
+
+Before do
+  Pub.bar_counter.flushall
+end
