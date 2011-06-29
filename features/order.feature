@@ -1,7 +1,9 @@
 Feature: Order drinks
   As a pub patron  
   I want bartenders to take orders asynchronously  
-  So I do not block the counter
+  So I do not block the counter  
+
+  Below we assume a bartender can fill an order in one second.
 
   Scenario: Order a drink
     Given 1 bartender
