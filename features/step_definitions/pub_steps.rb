@@ -11,6 +11,10 @@ module PubHelpers
     @orders ||= Hash.new
   end
 
+  def patron
+    @patron ||= pub.new_patron
+  end
+
   def pub
     @pub ||= Pub.new("Ye Olde Rubies")
   end
@@ -31,9 +35,12 @@ Given /^(\d+) bartenders?$/ do |count|
   end
 end
 
+Given /^I will wait no more than (\d+) seconds at the counter$/ do |seconds|
+  patron.waits_no_more_than seconds
+end
+
 When /^I order:$/ do |table|
   drinks = table.hashes.map { |hash| hash["drink"] }
-  patron = pub.new_patron
 
   @started_at = Time.now
   @tray       = patron.order(*drinks)
@@ -41,4 +48,10 @@ end
 
 Then /^I should receive my drinks? in (\d+) seconds?$/ do |seconds|
   (Time.now - @started_at).should be_within(0.1).of(seconds)
+end
+
+Then /^I should receive the following drinks? in (\d+) seconds?:$/ do |seconds, table|
+  (Time.now - @started_at).should be_within(0.1).of(seconds)
+  drinks = table.hashes.map { |hash| hash["drink"] }
+  @tray.should =~ drinks
 end

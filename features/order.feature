@@ -27,3 +27,16 @@ Feature: Order drinks
       | Brooklyn Lager |
       | Efes Pilsen    |
     Then I should receive my drinks in 1 second
+
+  Scenario: Patience
+    Given 1 bartender
+    And I will wait no more than 2 seconds at the counter
+    When I order:
+      | drink          |
+      | Brooklyn Lager |
+      | Efes Pilsen    |
+      | Stella         |
+    Then I should receive the following drinks in 2 seconds:
+      | drink                    |
+      | A pint of Brooklyn Lager |
+      | A pint of Efes Pilsen    |
