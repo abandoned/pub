@@ -28,9 +28,9 @@ Feature: Order drinks
       | Efes Pilsen    |
     Then I should receive my drinks in 1 second
 
-  Scenario: Patience
+  Scenario: Timeout
     Given 1 bartender
-    And I will wait no more than 2 seconds at the counter
+    And I have no patience to wait more than 2 seconds at the counter
     When I order:
       | drink          |
       | Brooklyn Lager |

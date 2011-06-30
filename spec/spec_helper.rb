@@ -4,4 +4,12 @@ require "rspec"
 
 require File.expand_path("../../lib/pub", __FILE__)
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+RSpec.configure do |c|
+  c.around(:each) do |example|
+    EM.synchrony do
+      Pub.counter.flushall
+      example.run
+      EM.stop
+    end
+  end
+end

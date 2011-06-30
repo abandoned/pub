@@ -1,10 +1,19 @@
 require "redis"
 require "redis/connection/synchrony"
 
+require "pub/helpers"
 require "pub/bartender"
 require "pub/patron"
 
 # A Redis-backed pub with a non-blocking bar counter.
+#
+# Or, putting aside the metaphor for a moment:
+#
+# A processing queue where consumers, instead of simply queuing jobs and
+# getting on with their lives, queue and wait for a response without
+# blocking the Ruby process.
+#
+# Each pub instance is a distinct queue.
 class Pub
   # The name of the pub.
   attr_reader :name
@@ -13,27 +22,22 @@ class Pub
     # A device that dispenses beer.
     attr_accessor :beer_tap
 
-    # Where beers are served.
-    def bar_counter
+    # The bar counter.
+    def counter
       Redis.new(url: beer_tap)
     end
   end
 
   # Enters a pub.
   #
-  # Takes the name of the pub and a block.
+  # Takes the name of the pub and an optional block.
   #
   #   Pub.new('Ye Olde Rubies') do |pub|
   #
-  #     patron    = pub.new_patron
-  #     bartender = pub.new_bartender
+  #     patron = pub.new_patron
   #
-  #     patron.order('1 pint of guinness') do |beer|
-  #       # consume beer
-  #     end
-  #
-  #     bartender.serve(10) do |beer|
-  #       take_payment(beer)
+  #     patron.order('Guinness') do |beer|
+  #       JSON.parse(beer).drink
   #     end
   #
   #   end
@@ -48,13 +52,13 @@ class Pub
     EM.stop
   end
 
-  # Conjures a new bartender.
+  # A new bartender.
   def new_bartender
     Bartender.new(name)
   end
 
-  # Conjures a new patron.
-  def new_patron
-    Patron.new(name)
+  # A new patron.
+  def new_patron(timeout = 5)
+    Patron.new(name, timeout)
   end
 end

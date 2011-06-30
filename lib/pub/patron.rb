@@ -1,55 +1,56 @@
 class Pub
+  # A patron.
+  #
+  # In other words, a consumer in our processing queue.
   class Patron
+    include Helpers
+
     # Creates a new pub patron.
     #
-    # Takes the name of the pub.
-    def initialize(pub_name)
-      @pub_name = pub_name
-      @timeout  = 30
+    # Takes the name of the pub and a timeout value in seconds.
+    #
+    # The timeout designates how long a patron is willing to wait at the
+    # counter to receive his or her beer.
+    def initialize(pub_name, timeout)
+      @pub_name, @timeout = pub_name, timeout
     end
 
-    # Orders one or more drinks at the bar counter.
+    # Orders one or more beer at the bar counter.
     #
-    # If given a block, yields drinks as they become available. Otherwise,
-    # returns all drinks on a tray.
-    def order(*drinks)
-      raise ArgumentError, 'Empty order' if drinks.empty?
+    # If given a block, yields beers as they become available. Otherwise,
+    # returns all on a tray.
+    #
+    # If not all beers are served within specified timeout, it will return only
+    # the beers that are ready.
+    def order(*beers)
+      raise ArgumentError, 'Empty order' if beers.empty?
 
       orders, tray = [], []
 
-      drinks.each do |drink|
-        bar_counter.rpush(@pub_name, drink)
-        orders << [@pub_name, drink].join(':')
+      beers.flatten!
+
+      beers.each do |beer|
+        counter.rpush(@pub_name, beer)
+        orders << order_for(beer)
       end
 
       timer = EM.add_timer(@timeout) do
-        bar_counter.unsubscribe
+        foo = counter.unsubscribe
       end
 
-      bar_counter.subscribe(*orders) do |on|
-        on.message do |order, drink|
-          bar_counter.unsubscribe(order)
+      counter.subscribe(*orders) do |on|
+        on.message do |order, beer|
+          counter.unsubscribe(order)
           if block_given?
-            yield drink
+            yield beer
           else
-            tray << drink
+            tray << beer
           end
         end
       end
 
       EM.cancel_timer(timer)
       block_given? ? nil : tray
-    end
-
-    # Sets how long the patron will wait for an order to be served.
-    def waits_no_more_than(seconds)
-      @timeout = seconds
-    end
-
-    private
-
-    def bar_counter
-      @bar_counter ||= Pub.bar_counter
     end
   end
 end

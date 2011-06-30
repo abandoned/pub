@@ -11,5 +11,5 @@ Around do |scenario, block|
 end
 
 Before do
-  Pub.bar_counter.flushall
+  Pub.counter.flushall
 end

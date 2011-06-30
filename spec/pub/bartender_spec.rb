@@ -2,33 +2,45 @@ require "spec_helper"
 
 class Pub
   describe Bartender do
-    include PubStubbers
+    let(:pub)       { Pub.new("Ye Olde Rubies") }
+    let(:bartender) { pub.new_bartender }
+    let(:counter)   { double("Counter").as_null_object }
+
+    before do
+      bartender.stub!(:counter).and_return(counter)
+    end
 
     describe "#take_order" do
-      it "takes one or more orders to fill" do
-        enter_pub do |pub|
-          bartender = pub.new_bartender
-          stub_orders(pub, 'Guinness', 'Stella', '1664')
-          bartender.take_orders(2).should =~ ['Guinness', 'Stella']
-          bartender.take_orders(2).should eql ['1664']
+      before do
+        counter.stub!(:lpop).and_return(Time.now)
+      end
+
+      context "when not passed a number" do
+        it "pops one order from the queue" do
+          orders = bartender.take_orders
+          orders.count.should eql 1
+        end
+      end
+
+      context "when passed a number" do
+        it "returns that many orders from the queue" do
+          orders = bartender.take_orders(3)
+          orders.count.should eql 3
         end
       end
     end
 
     describe "#serve" do
-      it "serves a drink" do
-        orders = ["Guinness", "Stella"]
-        drinks = Array.new
+      let(:beer) { "Guinness" }
+      after      { bartender.serve(beer) { beer } }
 
-        enter_pub do |pub|
-          bartender = pub.new_bartender
-          counter = bartender.send(:bar_counter)
-          counter.should_receive(:publish).once.with("Ye Olde Rubies:Guinness", "A pint of Guinness")
-          counter.should_receive(:publish).once.with("Ye Olde Rubies:Stella", "A pint of Stella")
-          orders.each do |order|
-            bartender.serve(order) { "A pint of #{order}" }
-          end
-        end
+      it "removes duplicate instances of the beer from the queue" do
+        counter.should_receive(:lrem).with(pub.name, 0, beer)
+      end
+
+      it "publishes the order" do
+        order = bartender.send(:order_for, beer)
+        counter.should_receive(:publish).with(order, beer)
       end
     end
   end

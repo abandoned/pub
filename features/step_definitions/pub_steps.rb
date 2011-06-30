@@ -35,8 +35,8 @@ Given /^(\d+) bartenders?$/ do |count|
   end
 end
 
-Given /^I will wait no more than (\d+) seconds at the counter$/ do |seconds|
-  patron.waits_no_more_than seconds
+Given /^I have no patience to wait more than (\d+) seconds at the counter$/ do |seconds|
+  patron.instance_variable_set(:@timeout, seconds)
 end
 
 When /^I order:$/ do |table|
