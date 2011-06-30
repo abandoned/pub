@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Paper Cavalier"]
   s.email       = "code@papercavalier.com"
   s.homepage    = "http://github.com/papercavalier/pub"
-  s.summary     = "A Redis-backed pub with a non-blocking bar counter"
+  s.summary     = "A Redis-backed pub or processing queue with a non-blocking bar counter"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {spec,features}/*`.split("\n")
