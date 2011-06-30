@@ -37,7 +37,7 @@ Feature: Order beers
       | Efes Pilsen    |
       | Stella         |
     Then "John" should receive the following beers in 2 seconds:
-      | beer                    |
+      | beer                     |
       | A pint of Brooklyn Lager |
       | A pint of Efes Pilsen    |
 
