@@ -1,4 +1,12 @@
 module PubHelpers
+  def create_patron(name)
+    instance_variable_set("@#{name}", @pub.new_patron)
+  end
+
+  def find_patron(name)
+    instance_variable_get("@#{name}")
+  end
+
   def orders
     @orders ||= Hash.new
   end
