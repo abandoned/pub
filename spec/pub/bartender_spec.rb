@@ -32,7 +32,10 @@ class Pub
 
     describe "#serve" do
       let(:beer) { "Guinness" }
-      after      { bartender.serve(beer) { beer } }
+
+      after do
+        bartender.serve(beer) { beer }
+      end
 
       it "removes duplicate instances of the beer from the queue" do
         counter.should_receive(:lrem).with(pub.name, 0, beer)
