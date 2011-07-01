@@ -30,7 +30,7 @@ Feature: Order beers
 
   Scenario: Timeout
     Given 1 bartender
-    And "John" has no patience to wait more than 2 seconds at the counter
+    And "John" has no patience to wait for more than 2 seconds at the counter
     When "John" orders:
       | beer           |
       | Brooklyn Lager |
