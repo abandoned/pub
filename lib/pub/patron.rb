@@ -7,13 +7,16 @@ class Pub
 
     # Creates a new pub patron.
     #
-    # Takes the name of the pub and a timeout value in seconds.
-    #
-    # The timeout designates how long a patron is willing to wait at the
-    # counter to receive his or her beer.
-    def initialize(pub_name, timeout)
-      @pub_name, @timeout = pub_name, timeout
+    # Takes the name of the pub and a value for patience.
+    def initialize(pub_name, patience)
+      @pub_name, @patience = pub_name, patience
     end
+
+    # The patron's patience.
+    #
+    # Measured in seconds. This designates how long a patron is willing to wait
+    # at the counter.
+    attr_accessor :patience
 
     # Orders one or more beer at the bar counter.
     #

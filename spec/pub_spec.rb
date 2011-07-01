@@ -20,9 +20,9 @@ describe Pub do
       pub.new_patron.should be_a Pub::Patron
     end
 
-    it "optionally sets the timeout of the patron" do
+    it "optionally deifnes the patron's patience" do
       patron = pub.new_patron(10)
-      patron.instance_variable_get(:@timeout).should eql 10
+      patron.patience.should eql 10
     end
   end
 end

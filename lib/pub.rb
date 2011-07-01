@@ -58,7 +58,10 @@ class Pub
   end
 
   # A new patron.
-  def new_patron(timeout = 5)
-    Patron.new(name, timeout)
+  #
+  # Takes an optional value, in seconds, for the patron's patience, which
+  # defaults to five seconds.
+  def new_patron(patience = 5)
+    Patron.new(name, patience)
   end
 end

@@ -54,7 +54,7 @@ end
 
 Given /^"([^"]+)" has no patience to wait more than (\d+) seconds at the counter$/ do |name, seconds|
   patron = find_or_create_patron(name)
-  patron.instance_variable_set(:@timeout, seconds)
+  patron.patience = seconds
 end
 
 When /^"([^"]+)" orders:$/ do |name, table|
