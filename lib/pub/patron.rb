@@ -37,8 +37,8 @@ class Pub
         orders << order_for(beer)
       end
 
-      timer = EM.add_timer(@timeout) do
-        foo = counter.unsubscribe
+      timer = EM.add_timer(@patience) do
+        counter.unsubscribe
       end
 
       counter.subscribe(*orders) do |on|
