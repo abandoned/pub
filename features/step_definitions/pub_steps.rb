@@ -28,7 +28,7 @@ module PubHelpers
   end
 
   def pub
-    @pub ||= Pub.new("Ye Olde Rubies")
+    @pub ||= Pub.enter("Ye Olde Rubies")
   end
 
   def sleep_until_order_complete(name)
@@ -52,7 +52,7 @@ Given /^(\d+) bartenders?$/ do |count|
   end
 end
 
-Given /^"([^"]+)" has no patience to wait more than (\d+) seconds at the counter$/ do |name, seconds|
+Given /^"([^"]+)" has no patience to wait for more than (\d+) seconds at the counter$/ do |name, seconds|
   patron = find_or_create_patron(name)
   patron.patience = seconds
 end
