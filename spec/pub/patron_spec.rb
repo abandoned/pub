@@ -1,8 +1,8 @@
 require "spec_helper"
 
-class Pub
+module Pub
   describe Patron do
-    let(:pub)     { Pub.new("Ye Olde Rubies") }
+    let(:pub)     { Pub.enter("Ye Olde Rubies") }
     let(:patron)  { pub.new_patron }
 
     describe "#order" do

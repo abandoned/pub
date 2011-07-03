@@ -1,4 +1,4 @@
-class Pub
+module Pub
   # A bartender.
   #
   # In other words, a producer in our processing queue.

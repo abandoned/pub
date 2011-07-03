@@ -1,4 +1,4 @@
-class Pub
+module Pub
   # Methods used by both patron and bartender.
   module Helpers
     # A specific order.

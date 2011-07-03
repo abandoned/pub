@@ -1,4 +1,4 @@
-class Pub
+module Pub
   # A patron.
   #
   # In other words, a consumer in our processing queue.
