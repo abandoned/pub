@@ -4,7 +4,7 @@ module Pub
     attr_reader :name
 
     def initialize(name)
-      @name = name
+      @name = "pub:#{name}"
       EM.synchrony { yield self } if block_given?
     end
 
