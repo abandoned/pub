@@ -1,11 +1,14 @@
 NUMBER_OF_WORKERS = 1
-REQUEST_CONCURRENCY = 1
+REQUEST_CONCURRENCY = 5
 
 require "rubygems"
 require "bundler/setup"
-require "rspec"
 
 require File.expand_path("../../lib/pub", __FILE__)
+
+def now
+  Time.now.to_i
+end
 
 queues = (1..6).map { |count| Pub.enter(count) }
 batch  = 20.times.map { "1234567890" }
@@ -14,6 +17,7 @@ data   = "foobar"
 EM.synchrony { Pub.counter.flushall; EM.stop }
 
 pids = []
+started_at = now
 
 NUMBER_OF_WORKERS.times do
   queues.each do |queue|
@@ -43,8 +47,9 @@ NUMBER_OF_WORKERS.times do
             queue.new_patron do |consumer|
               consumer.order(*batch)
               counter += 1
-              if counter % 10 == 0
-                puts counter
+              if counter % 100 == 0
+                duration = now - started_at
+                puts (counter / duration)
               end
             end
           end.resume
