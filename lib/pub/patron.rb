@@ -3,26 +3,24 @@ module Pub
   class Patron
     include Helpers
 
+    attr_accessor :timeout
+
     # Creates a new pub patron.
     #
-    # Takes the name of the pub and a value for patience.
-    def initialize(pub_name, patience)
-      @pub_name, @patience = pub_name, patience
-    end
-
-    # The patron's patience.
+    # Takes the name of the pub and an optional hash of options. The latter
+    # respects the following members:
     #
-    # Measured in seconds. This designates how long a patron is willing to wait
-    # at the counter.
-    attr_accessor :patience
+    # * `:timeout`, which specifies a timeout value, in seconds, for a pending
+    # order. Defaults to nil.
+    def initialize(pub_name, opts = {})
+      @pub_name = pub_name
+      @timeout  = opts[:timeout]
+    end
 
     # Orders one or more beer at the bar counter.
     #
     # If given a block, yields beers as they become available. Otherwise,
     # returns all on a tray.
-    #
-    # If not all beers are served within specified timeout, it will return only
-    # the beers that are ready.
     def order(*beers)
       raise ArgumentError, 'Empty order' if beers.empty?
 
@@ -35,8 +33,10 @@ module Pub
         orders << order_for(beer)
       end
 
-      timer = EM.add_timer(@patience) do
-        counter.unsubscribe
+      if @timeout
+        timer = EM.add_timer(@timeout) do
+          counter.unsubscribe
+        end
       end
 
       counter.subscribe(*orders) do |on|
@@ -50,7 +50,7 @@ module Pub
         end
       end
 
-      EM.cancel_timer(timer)
+      EM.cancel_timer(timer) if timer
       block_given? ? nil : tray
     end
   end

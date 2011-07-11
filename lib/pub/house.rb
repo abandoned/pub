@@ -20,10 +20,9 @@ module Pub
 
     # A new patron.
     #
-    # Takes an optional value, in seconds, for the patron's patience, which
-    # defaults to five seconds.
-    def new_patron(patience = 5)
-      Patron.new(name, patience)
+    # Takes an optional hash of options to pass to the new patron instance.
+    def new_patron(opts = {})
+      Patron.new(name, opts)
     end
   end
 end

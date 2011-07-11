@@ -15,9 +15,10 @@ module Pub
         subject.new_patron.should be_a Pub::Patron
       end
 
-      it "optionally defines the patron's patience" do
-        patron = subject.new_patron(10)
-        patron.patience.should eql 10
+      it "passes an optional hash to the new patron instance" do
+        opts = {foo: 1}
+        Patron.should_receive(:new).with(subject.name, opts)
+        patron = subject.new_patron(opts)
       end
     end
   end

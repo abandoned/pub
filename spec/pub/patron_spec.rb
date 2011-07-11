@@ -74,12 +74,12 @@ module Pub
         end
       end
 
-      context "when the patron's patience runs out" do
+      context "when the patron's timeout runs out" do
         let(:beer)    { "Guinness" }
         let(:counter) { patron.send(:counter) }
 
         before do
-          patron.patience = 0.1
+          patron.timeout = 0.1
         end
 
         after do
