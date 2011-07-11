@@ -21,8 +21,18 @@ module Pub
     # A new patron.
     #
     # Takes an optional hash of options to pass to the new patron instance.
+    #
+    # Yields the patron if a block is given. Patron will leave the counter
+    # after ordering a single round.
     def new_patron(opts = {})
-      Patron.new(name, opts)
+      patron = Patron.new(name, opts)
+
+      if block_given?
+        yield patron
+        patron.leave
+      else
+        patron
+      end
     end
   end
 end

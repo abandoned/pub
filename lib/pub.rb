@@ -42,6 +42,12 @@ module Pub
   #   end
   #
   def enter(name)
-    House.new(name)
+    pub = House.new(name)
+
+    if block_given?
+      yield pub
+    else
+      pub
+    end
   end
 end
