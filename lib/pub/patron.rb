@@ -1,7 +1,5 @@
 module Pub
-  # A patron.
-  #
-  # In other words, a consumer in our processing queue.
+  # A pub patron.
   class Patron
     include Helpers
 

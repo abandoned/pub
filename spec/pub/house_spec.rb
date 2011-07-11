@@ -2,7 +2,7 @@ require "spec_helper"
 
 module Pub
   describe House do
-    subject { House.new("Ye Olde Rubies") }
+    subject { House.new("Ye Rubies") }
 
     describe "#new_bartender" do
       it "returns a new bartender" do

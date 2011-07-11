@@ -2,7 +2,7 @@ require "spec_helper"
 
 module Pub
   describe Bartender do
-    let(:pub)       { Pub.enter("Ye Olde Rubies") }
+    let(:pub)       { Pub.enter("Ye Rubies") }
     let(:bartender) { pub.new_bartender }
     let(:counter)   { double("Counter").as_null_object }
 

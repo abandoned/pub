@@ -1,6 +1,6 @@
 module Pub
+  # A public house. Informally known as a pub.
   class House
-    # The name of the pub.
     attr_reader :name
 
     def initialize(name)

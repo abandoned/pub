@@ -2,7 +2,7 @@ require "spec_helper"
 
 module Pub
   describe Patron do
-    let(:pub)     { Pub.enter("Ye Olde Rubies") }
+    let(:pub)     { Pub.enter("Ye Rubies") }
     let(:patron)  { pub.new_patron }
 
     describe "#order" do

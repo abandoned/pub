@@ -31,7 +31,7 @@ module Pub
   #
   # Takes the name of the pub and an optional block.
   #
-  #   Pub.enter('Ye Olde Rubies') do |pub|
+  #   Pub.enter('Ye Rubies') do |pub|
   #
   #     patron = pub.new_patron
   #

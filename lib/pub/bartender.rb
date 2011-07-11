@@ -1,7 +1,5 @@
 module Pub
   # A bartender.
-  #
-  # In other words, a producer in our processing queue.
   class Bartender
     include Helpers
 
@@ -14,15 +12,13 @@ module Pub
 
     # Serves a beer to a thirsty patron.
     #
-    # Takes a block which should return a glass of beer.
-    #
-    # See below for example usage.
+    # Takes a block, which should return a glass of beer.
     def serve(beer, &block)
       counter.lrem(@pub_name, 0, beer)
       counter.publish(order_for(beer), block.call)
     end
 
-    # Takes one or more orders from the queue.
+    # Pops one or more orders from the queue.
     #
     #   orders = bartender.take_orders(3)
     #   orders.each do |order|
