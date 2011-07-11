@@ -1,63 +1,91 @@
 Feature: Order beers
   As a pub patron  
   I want bartenders to take orders asynchronously  
-  So I do not block the counter  
-
-  Below we assume a bartender can fill an order in one second.
+  So the counter is not blocked
 
   Scenario: Order a beer
-    Given 1 bartender
+    Given 1 pub
+    And 1 bartender
+    And a bartender serves 1 beer per second
     When "John" orders:
-      | beer           |
-      | Brooklyn Lager |
+      | beer          |
+      | Evented Lager |
     Then "John" should receive his beer in 1 second
 
   Scenario: Order multiple beers
-    Given 1 bartender
+    Given 1 pub
+    And 1 bartender
+    And a bartender serves 1 beer per second
     When "John" orders:
-      | beer           |
-      | Brooklyn Lager |
-      | Efes Pilsen    |
+      | beer          |
+      | Evented Lager |
+      | Async Pilsen  |
     Then "John" should receive his beers in 2 seconds
 
   Scenario: Two bartenders
-    Given 2 bartenders
+    Given 1 pub
+    And 2 bartenders
+    And a bartender serves 1 beer per second
     When "John" orders:
-      | beer           |
-      | Brooklyn Lager |
-      | Efes Pilsen    |
+      | beer          |
+      | Evented Lager |
+      | Async Pilsen  |
     Then "John" should receive his beers in 1 second
 
   Scenario: Timeout
-    Given 1 bartender
-    And "John" has no patience to wait for more than 2 seconds at the counter
+    Given 1 pub
+    And 1 bartender
+    And a bartender serves 1 beer per second
+    And "John" will not wait over 2 seconds
     When "John" orders:
-      | beer           |
-      | Brooklyn Lager |
-      | Efes Pilsen    |
-      | Stella         |
+      | beer          |
+      | Evented Lager |
+      | Async Pilsen  |
+      | Blocking Ale  |
     Then "John" should receive the following beers in 2 seconds:
-      | beer                     |
-      | A pint of Brooklyn Lager |
-      | A pint of Efes Pilsen    |
+      | beer                    |
+      | A pint of Evented Lager |
+      | A pint of Async Pilsen  |
 
   Scenario: Two patrons order the same beer
-    Given 1 bartender
-    And "John" orders:
-      | beer           |
-      | Brooklyn Lager |
+    Given 1 pub
+    And 1 bartender
+    And a bartender serves 1 beer per second
+    When "John" orders:
+      | beer          |
+      | Evented Lager |
     And "Jane" orders:
-      | beer           |
-      | Brooklyn Lager |
+      | beer          |
+      | Evented Lager |
     Then "John" should receive his beer in 1 second
     And "Jane" should receive her beer in 1 second
 
   Scenario: Crowd
-    Given 10 bartenders
+    Given 1 pub
+    And 10 bartenders
+    And a bartender serves 1 beer per second
     When 10 patrons order 1 beer each
-    Then they should receive their beers within 1 second
+    Then each should receive their beers within 1 second
 
   Scenario: Overcrowding
-    Given 2 bartenders
+    Given 1 pub
+    And 2 bartenders
+    And a bartender serves 1 beer per second
     When 4 patrons order 2 beers each
-    Then they should receive their beers within 4 seconds
+    Then each should receive their beers within 4 seconds
+
+  Scenario: Multiple pubs
+    Given 10 pubs
+    And each has 1 bartender
+    And a bartender serves 1 beer per second
+    When "John" orders in each pub:
+      | beer          |
+      | Evented Lager |
+    Then "John" should receive his beers in 1 second
+
+  Scenario: Able bartenders
+    Given 10 pubs
+    And each has 1 bartender
+    And a bartender serves 2 beers per second
+    When 2 patrons order 1 beer each
+    Then each should receive their beers within 1 second
