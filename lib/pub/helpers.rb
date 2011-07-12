@@ -9,6 +9,7 @@ module Pub
     # Leave the counter.
     def leave
       counter.quit
+      @counter = nil
     end
 
     # A specific order.
