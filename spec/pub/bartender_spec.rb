@@ -11,21 +11,30 @@ module Pub
     end
 
     describe "#take_order" do
-      before do
-        counter.stub!(:lpop).and_return(Time.now)
-      end
+      context "when there are pending orders" do
+        before do
+          counter.stub!(:lpop).and_return(Time.now)
+        end
 
-      context "when not passed a number" do
-        it "pops one order from the queue" do
-          orders = bartender.take_orders
-          orders.count.should eql 1
+        context "when not passed an integer" do
+          it "returns one order from the queue" do
+            orders = bartender.take_orders
+            orders.count.should eql 1
+          end
+        end
+
+        context "when passed an integer" do
+          it "returns that many orders from the queue" do
+            orders = bartender.take_orders(3)
+            orders.count.should eql 3
+          end
         end
       end
 
-      context "when passed a number" do
-        it "returns that many orders from the queue" do
+      context "when there are no pending orders" do
+        it "queries the queue only once" do
+          counter.should_receive(:lpop).once.and_return(nil)
           orders = bartender.take_orders(3)
-          orders.count.should eql 3
         end
       end
     end
