@@ -37,7 +37,7 @@ module Pub
     pub = House.new(name)
 
     if block_given?
-      yield pub
+      EM.synchrony { yield pub } if block_given?
     else
       pub
     end

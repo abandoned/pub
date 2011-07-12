@@ -5,7 +5,6 @@ module Pub
 
     def initialize(name)
       @name = "pub:#{name}"
-      EM.synchrony { yield self } if block_given?
     end
 
     # Closes the pub for the night.
