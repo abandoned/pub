@@ -7,14 +7,14 @@ require "pub/bartender"
 require "pub/house"
 require "pub/patron"
 
-# A pub with a non-blocking bar counter.
+# A pub.
 module Pub
   extend self
 
   # A device that dispenses beer.
   attr_accessor :beer_tap
 
-  # A bar counter.
+  # A non-blocking bar counter.
   def counter
     Redis.new(url: beer_tap)
   end
@@ -22,17 +22,6 @@ module Pub
   # Enters a pub.
   #
   # Takes the name of the pub and an optional block.
-  #
-  #   Pub.enter('Ye Rubies') do |pub|
-  #
-  #     patron = pub.new_patron
-  #
-  #     patron.order('Guinness') do |beer|
-  #       JSON.parse(beer).drink
-  #     end
-  #
-  #   end
-  #
   def enter(name)
     pub = House.new(name)
 
