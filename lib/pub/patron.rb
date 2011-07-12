@@ -29,6 +29,8 @@ module Pub
       beers.flatten!
 
       beers.each do |beer|
+        # TODO: Order all beers at once when Redis stable bumps past 2.3.
+        # cf. http://redis.io/commands/rpush
         counter.rpush(@pub_name, beer)
         orders << order_for(beer)
       end
