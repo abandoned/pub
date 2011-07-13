@@ -13,7 +13,7 @@ module Pub
           patron.stub!(:counter).and_return(counter)
         end
 
-        context "when ordering a beer" do
+        context "when ordering one beer" do
           let(:beer) { "Guinness" }
 
           after do
