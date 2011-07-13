@@ -32,21 +32,6 @@ Feature: Order beers
       | Async Pilsen  |
     Then "John" should receive his beers in 1 second
 
-  Scenario: Timeout
-    Given 1 pub
-    And 1 bartender
-    And a bartender serves 1 beer per second
-    And "John" will not wait over 2 seconds
-    When "John" orders:
-      | beer          |
-      | Evented Lager |
-      | Async Pilsen  |
-      | Blocking Ale  |
-    Then "John" should receive the following beers in 2 seconds:
-      | beer                    |
-      | A pint of Evented Lager |
-      | A pint of Async Pilsen  |
-
   Scenario: Two patrons order the same beer
     Given 1 pub
     And 1 bartender

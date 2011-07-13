@@ -86,13 +86,6 @@ module Pub
           patron.order(beer)
         end
 
-        context "if no other patron has ordered the same beer" do
-          it "removes the beer from the counter queue" do
-            pending "Haven't figured out a way do this yet"
-            counter.should_receive(:lrem).with(pub.name, 0, beer)
-          end
-        end
-
         context "if another patron has ordered the same beer" do
           it "does not remove the beer from the counter queue" do
             counter.should_not_receive(:lrem)

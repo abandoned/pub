@@ -134,7 +134,7 @@ Then /^each should receive their beers? within (\d+) seconds?$/ do |seconds|
   end
 end
 
-Then /^"([^"]+)" should receive the following beers? in (\d+) seconds?:$/ do |name, seconds, table|
+Then /^"([^"]+)" should receive in (\d+) seconds?:$/ do |name, seconds, table|
   sleep_until_order_complete(name)
 
   activity(name).each do |pub_name, order_activity|
@@ -144,5 +144,27 @@ Then /^"([^"]+)" should receive the following beers? in (\d+) seconds?:$/ do |na
     beers = map_beers(table)
     tray = order_activity[:tray]
     tray.should =~ beers
+  end
+end
+
+Then /^there should be no pending orders? for:$/ do |table|
+  redis = Pub.counter
+  pubs.each do |pub|
+    size = redis.llen(pub.name)
+    pending = redis.lrange(pub.name, 0, size)
+    map_beers(table).each do |beer|
+      pending.should_not include beer
+    end
+  end
+end
+
+Then /^there should be (?:a )?pending orders? for:$/ do |table|
+  redis = Pub.counter
+  pubs.each do |pub|
+    size = redis.llen(pub.name)
+    pending = redis.lrange(pub.name, 0, size)
+    map_beers(table).each do |beer|
+      pending.should include beer
+    end
   end
 end

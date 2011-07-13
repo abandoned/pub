@@ -22,6 +22,7 @@ module Pub
     # If given a block, yields beers as they become available. Otherwise,
     # returns all on a tray.
     def order(*beers)
+      # TODO disentangle procedural code.
       raise ArgumentError, 'Empty order' if beers.empty?
 
       orders, tray = [], []
@@ -38,16 +39,30 @@ module Pub
       if @timeout
         timer = EM.add_timer(@timeout) do
           counter.unsubscribe
+          Fiber.new do
+            counter = Pub.counter
+            orders.each do |order|
+              other_pending_orders = counter.publish(order, 'NOOP')
+              if other_pending_orders == 0
+                # TODO Racy, even if infitesimally!
+                beer = order.gsub(/^.*:+/, '')
+                counter.lrem(@pub_name, 0, beer)
+              end
+            end
+          end.resume
         end
       end
 
       counter.subscribe(*orders) do |on|
         on.message do |order, beer|
-          counter.unsubscribe(order)
-          if block_given?
-            yield beer
-          else
-            tray << beer
+          unless beer == 'NOOP'
+            counter.unsubscribe(order)
+            orders.delete(order)
+            if block_given?
+              yield beer
+            else
+              tray << beer
+            end
           end
         end
       end
